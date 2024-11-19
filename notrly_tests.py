@@ -1,4 +1,4 @@
-from src import HoffmanEncoder
+from src import HuffmanEncoder
 
 dict_to_encode = {
     'а': 0.18,
@@ -14,7 +14,7 @@ dict_to_encode = {
 }
 
 str1 = 'смотана мама мота'
-encoder = HoffmanEncoder(dict_to_encode)
+encoder = HuffmanEncoder(dict_to_encode)
 
 encoded_str = encoder.encode_message(str1)
 print(f'Not-a-test1')
@@ -39,7 +39,7 @@ dict_to_encode = {
 }
 
 str1 = 'bot works'
-encoder1 = HoffmanEncoder(dict_to_encode)
+encoder1 = HuffmanEncoder(dict_to_encode)
 
 encoded_str = encoder1.encode_message(str1)
 print('Not-a-test2')

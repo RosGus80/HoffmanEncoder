@@ -1,4 +1,4 @@
-class HoffmanEncoder:
+class HuffmanEncoder:
 
     def __init__(self, input_dict: dict):
         self.input_dict = input_dict
@@ -108,8 +108,8 @@ class HoffmanEncoder:
         return output
 
     def __str__(self):
-        return f'Hoffman encoder object with encoded dict: {self.encoded_dict}'
+        return f'Huffman encoder object with encoded dict: {self.encoded_dict}'
 
     def __repr__(self):
-        return f'Hoffman encoder object with encoded dict: {self.encoded_dict}'
+        return f'Huffman encoder object with encoded dict: {self.encoded_dict}'
 
