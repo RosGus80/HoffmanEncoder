@@ -1,19 +1,3 @@
-dict_to_encode = {
-    'а': 0.18,
-    'с': 0.132,
-    'м': 0.12,
-    'о': 0.168,
-    'т': 0.09,
-    'я': 0.01,
-    'е': 0.032,
-    'ь': 0.068,
-    'н': 0.11,
-    ' ': 0.09,
-}
-
-# Можно подставить любой словарь и вероятности (возможно, кстати, даже что сумма вероятностей не дает 1)
-
-
 class HoffmanEncoder:
 
     def __init__(self, input_dict: dict):
@@ -58,7 +42,7 @@ class HoffmanEncoder:
             return f'Node obj with symbols: {self.symbols} and total prob of {self.total_prob}'
 
     def encode_dict(self):
-        symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in dict_to_encode.items()]
+        symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in self.input_dict.items()]
         nodes_list = [self.Node() for i in range(len(symbols_list))]
 
         # Добавляем каждому начальному узлу соответствующий символ
@@ -129,19 +113,3 @@ class HoffmanEncoder:
     def __repr__(self):
         return f'Hoffman encoder object with encoded dict: {self.encoded_dict}'
 
-
-str1 = 'смотана мама мота'
-encoder = HoffmanEncoder(dict_to_encode)
-
-encoded_str = encoder.encode_message(str1)
-print(encoded_str)
-print(len(encoded_str))
-
-decoded_str = encoder.decode_message(encoded_str)
-print(decoded_str)
-
-print(encoder.total_bytes)
-print(encoder.encoded_dict)
-
-# Перевод однозначный И достигнута оптимальная кодировка. Дело было в том, что я деал node_list.pop(-2),
-# и это по сути был третий последний элемент списка
