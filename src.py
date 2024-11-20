@@ -1,8 +1,8 @@
 class HuffmanEncoder:
 
-    def __init__(self, input_dict: dict):
+    def __init__(self, input_dict: dict[str, float]):
         self.input_dict = input_dict
-        self.encoded_dict, self.encoded_object_list = self.encode_dict()
+        self.encoded_dict = self.encode_dict()
         self.total_bytes = self.count_total_used_encoding_symbols()
 
     class EncodedSymbol:
@@ -11,37 +11,48 @@ class HuffmanEncoder:
             self.probability = probability
             self.code = ''
 
-        def __str__(self):
-            return f'EncodedSymbol obj with symbol: {self.symbol} and probability of {self.probability}. ' \
-                   f'Currently encoded by {self.code}'
-
         def __repr__(self):
             return f'EncodedSymbol obj with symbol "{self.symbol}" and probability of {self.probability}. ' \
                    f'Currently encoded by "{self.code}"'
 
     class Node:
-        def __init__(self, symbols=None, total_prob=0):
+        def __init__(self, symbols: list = None):
             if not symbols:
                 self.symbols = []
             else:
+                if type(symbols) != list:
+                    raise TypeError('symbols arg must be a list')
                 self.symbols = symbols
+
+            # Автоматический расчет суммарной вероятности в узле, складывая вероятности каждого входящего символа
+            total_prob = 0
+            for symb in self.symbols:
+                total_prob += symb.probability
 
             self.total_prob = total_prob
 
         def add_symbol(self, symbol_obj):
-            """Takes an EncodedSymbol instance and adds it to self.symbols. Also increasing self.total_prob"""
-            # Prolly quite useless but convenient
+            """
+            Принимает аргументом объект класса EncodedSymbol, добавляет его в список символов узла,
+            а его вероятность появления добавляет в суммарную вероятность узла.
+            :type symbol_obj: EncodedSymbol
+            :rtype: None
+            """
 
             self.symbols.append(symbol_obj)
             self.total_prob = self.total_prob + symbol_obj.probability
-
-        def __str__(self):
-            return f'Node obj with symbols: {self.symbols} and total prob of {self.total_prob}'
 
         def __repr__(self):
             return f'Node obj with symbols: {self.symbols} and total prob of {self.total_prob}'
 
     def encode_dict(self):
+        """
+        Обрабатывает словарь, переданный при инициализации объекта HuffmanEncoder и кодирует
+        его согласно алгоритму Хаффмана. Эта функция используется в функции инициализации объекта HuffmanEncoder,
+        добавляя поле кодированного словаря.
+        :return: Словарь с ключом символа и значением кода для этого символа.
+        :rtype: dict[str, str].
+        """
         symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in self.input_dict.items()]
         nodes_list = [self.Node() for i in range(len(symbols_list))]
 
@@ -64,21 +75,25 @@ class HuffmanEncoder:
             for encoded_symbol in second_last_node.symbols:
                 encoded_symbol.code = f'1{encoded_symbol.code}'
 
-            new_node = self.Node(symbols=last_node.symbols + second_last_node.symbols,
-                                 total_prob=last_node.total_prob + second_last_node.total_prob)
+            # Создаем новый узел ищ ==з убранных двух
+            new_node = self.Node(symbols=last_node.symbols + second_last_node.symbols,)
 
             nodes_list.append(new_node)
 
         output_dict = {}
-        output_objects_list = []
 
-        for symb in sorted(symbols_list, key=lambda x: x.probability, reverse=True):
-            output_objects_list.append(symb)
+        for symb in symbols_list:
             output_dict[symb.symbol] = symb.code
 
-        return output_dict, output_objects_list
+        return output_dict
 
     def encode_message(self, message: str):
+        """
+        Кодирует сообщение согласно полученному полю кодированного словаря.
+        :param message: Сообщение для кодировки.
+        :return: Закодированное сообщение.
+        :rtype: str.
+        """
         output_str = ''
         for char in message:
             try:
@@ -88,6 +103,12 @@ class HuffmanEncoder:
         return output_str
 
     def decode_message(self, message: str):
+        """
+        Декодирует сообщение согласно полученному полю кодированного словаря.
+        :param message: Сообщение для декодировки.
+        :return: Декодированное сообщение.
+        :rtype: str.
+        """
         output_str = ''
         current_char = ''
         for char in message:
@@ -101,14 +122,16 @@ class HuffmanEncoder:
         return output_str
 
     def count_total_used_encoding_symbols(self):
+        """
+        Считает, сколько символов потребуется для кодировки всех символов в словаре.
+        :return: Количество необходимых символов.
+        :rtype: int.
+        """
         output = 0
         for v in self.encoded_dict.values():
             output += len(v)
 
         return output
-
-    def __str__(self):
-        return f'Huffman encoder object with encoded dict: {self.encoded_dict}'
 
     def __repr__(self):
         return f'Huffman encoder object with encoded dict: {self.encoded_dict}'
