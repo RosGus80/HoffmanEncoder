@@ -47,4 +47,4 @@ def testcase2():
 
 testcase1()
 testcase2()
-print('Tests were ran successfully')
+print('The tests were ran successfully')

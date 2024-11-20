@@ -2,7 +2,7 @@ class HuffmanEncoder:
 
     def __init__(self, input_dict: dict[str, float]):
         self.input_dict = input_dict
-        self.encoded_dict = self.encode_dict()
+        self.encoding_dict, self.decoding_dict = self.encode_dict()
         self.total_bytes = self.count_total_used_encoding_symbols()
 
     class EncodedSymbol:
@@ -50,8 +50,9 @@ class HuffmanEncoder:
         Обрабатывает словарь, переданный при инициализации объекта HuffmanEncoder и кодирует
         его согласно алгоритму Хаффмана. Эта функция используется в функции инициализации объекта HuffmanEncoder,
         добавляя поле кодированного словаря.
-        :return: Словарь с ключом символа и значением кода для этого символа.
-        :rtype: dict[str, str].
+        :return: Два словаря: с ключом-символом и значением-кодом и с ключом-кодом и значением-символом.
+        Два словаря нужно для удобного кодирования и декодирования.
+        :rtype: tuple[dict[str, str], dict[str, str]].
         """
         symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in self.input_dict.items()]
         nodes_list = [self.Node() for i in range(len(symbols_list))]
@@ -75,17 +76,19 @@ class HuffmanEncoder:
             for encoded_symbol in second_last_node.symbols:
                 encoded_symbol.code = f'1{encoded_symbol.code}'
 
-            # Создаем новый узел ищ ==з убранных двух
+            # Создаем новый узел из убранных двух
             new_node = self.Node(symbols=last_node.symbols + second_last_node.symbols,)
 
             nodes_list.append(new_node)
 
-        output_dict = {}
+        output_encoding_dict = {}
+        output_decoding_dict = {}
 
         for symb in symbols_list:
-            output_dict[symb.symbol] = symb.code
+            output_encoding_dict[symb.symbol] = symb.code
+            output_decoding_dict[symb.code] = symb.symbol
 
-        return output_dict
+        return output_encoding_dict, output_decoding_dict
 
     def encode_message(self, message: str):
         """
@@ -97,7 +100,7 @@ class HuffmanEncoder:
         output_str = ''
         for char in message:
             try:
-                output_str = output_str + self.encoded_dict[char]
+                output_str = output_str + self.encoding_dict[char]
             except KeyError:
                 raise KeyError(f'Unknown symbol "{char}" in message "{message}"')
         return output_str
@@ -111,10 +114,11 @@ class HuffmanEncoder:
         """
         output_str = ''
         current_char = ''
+
         for char in message:
             current_char += char
-            if current_char in self.encoded_dict.values():
-                output_str = output_str + list(self.encoded_dict.keys())[list(self.encoded_dict.values()).index(current_char)]
+            if current_char in self.encoding_dict.values():
+                output_str = output_str + self.decoding_dict[current_char]
                 current_char = ''
             else:
                 continue
@@ -128,11 +132,11 @@ class HuffmanEncoder:
         :rtype: int.
         """
         output = 0
-        for v in self.encoded_dict.values():
+        for v in self.encoding_dict.values():
             output += len(v)
 
         return output
 
     def __repr__(self):
-        return f'Huffman encoder object with encoded dict: {self.encoded_dict}'
+        return f'Huffman encoder object with encoded dict: {self.encoding_dict}'
 
