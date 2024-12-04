@@ -1,4 +1,13 @@
 class HuffmanEncoder:
+    """Ключевой класс для кодировки Хаффмана.
+    При инициализации объекта необходимо передать либо dict[str, float] с символами и вероятностями их появления в
+    тексте, либо str - строку с символами, которые надо закодировать.
+    Объект класса HuffmanEncoder может кодировать сообщения согласно полученному при инициализации словарю, либо
+    декодировать сообщение двоичного кода, исходя из предположения, что оно было получено согласно кодировке, которую
+    определил экземпляр этого же класса (разные экземпляры могут по-разному решить кодировать один и тот же текст,
+    потому что возможны ситуации неопределенности, когда узлы будут равновероятны, и выбор нуля или единицы
+    тому или иному узу - арбитрарный выбор, который алгоритмом отдан случайности).
+    """
 
     def __init__(self, input_data=None):
         """
@@ -158,12 +167,19 @@ class HuffmanEncoder:
 
     @staticmethod
     def count_dict(input_str: str) -> dict:
-        chars_list = list(input_str)
+        """
+        Получает строку на вход и возвращает dict[str, float] с символами и вероятностями их появления в строке.
+        Словарь такого вида используется как "сырой" для дальнейшего кодирования.
+        :param input_str: строка, символы которой надо закодировать.
+        :return: dict[str, float] с символами и вероятностями их появления в строке.
+        :rtype: dict[str, float].
+        """
+
         output_dict = {}
 
-        for char in chars_list:
-            chars_appearance = chars_list.count(char)
-            char_probability = round(chars_appearance / len(chars_list), 2)
+        for char in input_str:
+            chars_appearance = input_str.count(char)
+            char_probability = round(chars_appearance / len(input_str), 2)
 
             output_dict[char] = char_probability
 
