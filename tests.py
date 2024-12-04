@@ -45,6 +45,32 @@ def testcase2():
     assert(decoded_str == string)
 
 
+def testcase3():
+    dict_to_encode = {
+        'а': 0.12,
+        'р': 0.1,
+        'б': 0.08,
+        'у': 0.2,
+        'з': 0.06,
+        ' ': 0.04,
+        'в': 0.04,
+        'к': 0.04,
+        'с': 0.02,
+        'н': 0.15,
+        'й': 0.12,
+        'ы': 0.03,
+    }
+
+    encoder = HuffmanEncoder('арбуз вкусный')
+
+    encoded_str = encoder.encode_message('арбуз вкусный')
+    decoded_str = encoder.decode_message(encoded_str)
+
+    assert(encoded_str == '01011011100011111111101001100001110111010001000')
+    assert(decoded_str == 'арбуз вкусный')
+
+
 testcase1()
 testcase2()
+testcase3()
 print('The tests were ran successfully')

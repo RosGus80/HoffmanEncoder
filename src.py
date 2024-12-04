@@ -1,12 +1,19 @@
 class HuffmanEncoder:
 
-    def __init__(self, input_dict: dict[str, float] = None, input_str: str = None):
-        if input_dict is not None and input_str is not None:
-            raise ValueError('Only one of two arguments may be passed (only input_dict or only input_str)')
-        elif input_dict is not None:
-            self._input_dict = input_dict
+    def __init__(self, input_data=None):
+        """
+        :param input_data: Принимает либо dict[str, float], либо str.
+        Если передан словарь, в нем должны содержаться все необходимые символы как ключи и
+        вероятности их появления в тексте как значения.
+        Если передана строка, объект сам рассчитает вероятности появления всех символов и получит нужный словарь.
+        """
+
+        if type(input_data) == dict:
+            self._input_dict = input_data
+        elif type(input_data) == str:
+            self._input_dict = self.count_dict(input_data)
         else:
-            self._input_dict = self.count_dict(input_str)
+            raise TypeError('input_data must be a dict or str')
 
         self.encoding_dict, self.decoding_dict = self.encode_dict()
         self.total_bytes = self.count_total_used_encoding_symbols()
