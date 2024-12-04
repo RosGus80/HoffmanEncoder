@@ -1,7 +1,13 @@
 class HuffmanEncoder:
 
-    def __init__(self, input_dict: dict[str, float]):
-        self._input_dict = input_dict
+    def __init__(self, input_dict: dict[str, float] = None, input_str: str = None):
+        if input_dict is not None and input_str is not None:
+            raise ValueError('Only one of two arguments may be passed (only input_dict or only input_str)')
+        elif input_dict is not None:
+            self._input_dict = input_dict
+        else:
+            self._input_dict = self.count_dict(input_str)
+
         self.encoding_dict, self.decoding_dict = self.encode_dict()
         self.total_bytes = self.count_total_used_encoding_symbols()
 
@@ -144,20 +150,18 @@ class HuffmanEncoder:
         return output
 
     @staticmethod
-    def count_dict(input_str: str) -> tuple[dict[str, float], dict[float, str]]:
+    def count_dict(input_str: str) -> dict:
         chars_list = list(input_str)
-        output_encoding_dict = {}
-        output_decoding_dict = {}
+        output_dict = {}
 
         for char in chars_list:
             chars_appearance = chars_list.count(char)
             char_probability = round(chars_appearance / len(chars_list), 2)
             print(char_probability)
 
-            output_encoding_dict[char] = char_probability
-            output_decoding_dict[char_probability] = char
+            output_dict[char] = char_probability
 
-        return output_encoding_dict, output_decoding_dict
+        return output_dict
 
     def __repr__(self):
         return f'Huffman encoder object with encoded dict: {self.encoding_dict}'
