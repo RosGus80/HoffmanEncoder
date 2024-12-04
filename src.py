@@ -164,7 +164,6 @@ class HuffmanEncoder:
         for char in chars_list:
             chars_appearance = chars_list.count(char)
             char_probability = round(chars_appearance / len(chars_list), 2)
-            print(char_probability)
 
             output_dict[char] = char_probability
 
