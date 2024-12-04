@@ -1,7 +1,7 @@
 class HuffmanEncoder:
 
     def __init__(self, input_dict: dict[str, float]):
-        self.input_dict = input_dict
+        self._input_dict = input_dict
         self.encoding_dict, self.decoding_dict = self.encode_dict()
         self.total_bytes = self.count_total_used_encoding_symbols()
 
@@ -45,6 +45,12 @@ class HuffmanEncoder:
         def __repr__(self):
             return f'Node obj with symbols: {self.symbols} and total prob of {self.total_prob}'
 
+    def get_input_dict(self):
+        return self._input_dict
+
+    def set_input_dict(self, value):
+        self._input_dict = value
+
     def encode_dict(self):
         """
         Обрабатывает словарь, переданный при инициализации объекта HuffmanEncoder и кодирует
@@ -54,7 +60,7 @@ class HuffmanEncoder:
         Два словаря нужно для удобного кодирования и декодирования.
         :rtype: tuple[dict[str, str], dict[str, str]].
         """
-        symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in self.input_dict.items()]
+        symbols_list = [self.EncodedSymbol(symbol=sym, probability=prob) for sym, prob in self.get_input_dict().items()]
         nodes_list = [self.Node() for i in range(len(symbols_list))]
 
         # Добавляем каждому начальному узлу соответствующий символ
@@ -136,6 +142,11 @@ class HuffmanEncoder:
             output += len(v)
 
         return output
+
+    # TODO: сделать ф-цию, принимающую строку и возвращающую словарь с символами и вероятностями их появления
+    @staticmethod
+    def count_dict(input_str: str) -> tuple[dict[str, float], dict[float, str]]:
+        pass
 
     def __repr__(self):
         return f'Huffman encoder object with encoded dict: {self.encoding_dict}'
